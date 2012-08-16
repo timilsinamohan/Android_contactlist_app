@@ -47,22 +47,28 @@ public class ContactAdapter1 extends ArrayAdapter<Contact1> {
 		View view=null;
 		
 
-		if(convertView==null)
-		{
+		View view=null;
+		  
+		
+		
 			LayoutInflater inflater=_context.getLayoutInflater();
 			view=inflater.inflate(R.layout.contactlistitem, null);
+			lv = (ListView)view.findViewById(R.id.contactList1);
 			final ViewHolder viewHolder=new ViewHolder();
 			viewHolder.text=(TextView)view.findViewById(R.id.txtDisplayName);
 			viewHolder.imageview =(ImageView)view.findViewById(R.id.contact_image);
 			viewHolder.setContact(_contacts.get(position));
 			view.setTag(viewHolder);
 			
-		}
+			 // LoadMore button
+	        //Button btnLoadMore = new Button(_context);
+	      //  btnLoadMore.setText("Load More");
+	        // Adding Load More button to listview at bottom
+	       // view=(View)btnLoadMore;
+	       //  lv.addFooterView((View)btnLoadMore);
+			
 		
-		else 
-		{
-			view = convertView;
-		}
+		
 		
 		return view;
 	}
