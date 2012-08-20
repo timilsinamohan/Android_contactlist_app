@@ -5,17 +5,21 @@ import java.util.List;
 
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ListView;
+import android.widget.Button;
 
 public class ContactAdapter1 extends ArrayAdapter<Contact1> {
 
 	private final List<Contact1> _contacts;
 	private final Activity _context;
+	ListView lv;
 	
 	public ContactAdapter1(Activity context, List<Contact1> contacts)
 	{
@@ -38,15 +42,13 @@ public class ContactAdapter1 extends ArrayAdapter<Contact1> {
 	@Override
 	public Contact1 getItem(int position)
 	{
+		System.out.println("Checking current position:"+_contacts.get(position));
 		return _contacts.get(position);
 	}
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent)
 	{
 		
-		View view=null;
-		
-
 		View view=null;
 		  
 		
@@ -60,14 +62,37 @@ public class ContactAdapter1 extends ArrayAdapter<Contact1> {
 			viewHolder.setContact(_contacts.get(position));
 			view.setTag(viewHolder);
 			
-			 // LoadMore button
-	        //Button btnLoadMore = new Button(_context);
-	      //  btnLoadMore.setText("Load More");
-	        // Adding Load More button to listview at bottom
-	       // view=(View)btnLoadMore;
-	       //  lv.addFooterView((View)btnLoadMore);
 			
-		
+			
+			 // Loading button at the end
+	        Button btnLoadMore = new Button(_context);
+	        btnLoadMore.setText("Form The Group");
+	        // Adding Load More button to listview at bottom
+	      //  int currentPosition = lv.getFirstVisiblePosition();
+	       // System.out.println("Checking current position:"+currentPosition);
+	        
+	       
+	        if (position==getCount()-1)
+	        {
+	        view=(View)btnLoadMore;
+	        }
+	        
+	        
+	        /**
+	        * Listening to Load More button click event
+	        * */
+	        final ContactListActivity1 con= new ContactListActivity1();
+	        btnLoadMore.setOnClickListener(new View.OnClickListener() {
+	            @Override
+	            public void onClick(View arg0) {
+	            	System.out.println("IDS" +con.ids);
+	               
+	              // con.just_print();
+	            }
+	        });
+	        
+	        lv.addFooterView((View)btnLoadMore);
+			
 		
 		
 		return view;
