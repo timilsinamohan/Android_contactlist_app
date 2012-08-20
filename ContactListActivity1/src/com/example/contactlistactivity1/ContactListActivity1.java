@@ -15,8 +15,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.provider.ContactsContract.Data;
+import java.util.*; 
 
 public class ContactListActivity1 extends ListActivity {
+	static ArrayList<String> ids = new ArrayList<String>();
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,23 @@ public class ContactListActivity1 extends ListActivity {
     	Contact1 c=(Contact1)o;
     	Toast.makeText(this, c.getDisplayName(), Toast.LENGTH_SHORT).show();
     	Toast.makeText(this, c.getId(), Toast.LENGTH_SHORT).show();
+    	ids.add(c.getId());
+    	System.out.println("Testing id"+ids);
     }
+    
+   
+    
+   /* public void just_print()
+    {
+    	 
+    	//System.out.println("Am I getting the signal");
+    	for(int i=0; i<ids.size(); i++){
+          //  System.out.println(ids.get(i));
+        }
+         
+
+    }
+    */
     
     private ContactList1 getContacts()
     {
