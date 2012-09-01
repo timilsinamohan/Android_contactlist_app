@@ -12,9 +12,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
@@ -29,145 +32,154 @@ import android.content.DialogInterface.OnClickListener;
 
 public class ContactListActivity1 extends ListActivity {
 	static ArrayList<String> ids = new ArrayList<String>();
-	
 
-	
-	 ListView lv;
-	 private static int save = -1;
+	ListView lv;
+
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		lv=getListView();
-		
+		View v = getLayoutInflater().inflate(R.layout.contactlistitem, null);
+		lv = getListView();
+
 		ContactList1 contactList = this.getContacts();
 		ArrayAdapter<Contact1> adapter = new ContactAdapter1(this,
 				contactList.getContacts());
-		
-		//  System.out.println("I want to know lv::"+lv);
-		  // LoadMore button
-	        Button btnLoadMore = new Button(this);
-	        btnLoadMore.setText("Form the group");
-	     
-		View v = getLayoutInflater().inflate(R.layout.contactlistitem,null);
-		
-		
-		
+
+		// System.out.println("I want to know lv::"+lv);
+		// LoadMore button
+		Button btnLoadMore = new Button(this);
+		btnLoadMore.setText("Form the group");
+
 		lv.addFooterView(btnLoadMore);
-		
-		
+
 		btnLoadMore.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
-			
 			public void onClick(View v) {
-				
+
 				SimpleAlert(v);
-				//ids.clear();
-				
-				
+				// ids.clear();
 
 			}
 
 		});
-		//lv.setAdapter(adapter);
+		// lv.setAdapter(adapter);
 		setListAdapter(adapter);
-		
-	     
-		
 
 	}
-	
+	//private static int save = -1;
+	int pos = 0;
+	int save = -1;
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-	//visualize the clicked listview
-    //  l.getChildAt(position).setBackgroundColor(Color.GRAY);
-   /*
-        if (save !=-1 && save == position)
-       {
-    	   l.getChildAt(save).setBackgroundColor(Color.TRANSPARENT); 
-    	   
-       }
-        save = position;
-        */
-        
-		Object o = this.getListAdapter().getItem(position);
-		//StateListItem currItem = (StateListItem) this.getListAdapter().getItem(position);
-		Contact1 c = (Contact1) o;
-		 
-		Toast.makeText(this, c.getDisplayName(), Toast.LENGTH_SHORT).show();
-		
-		
-		
-	//	Toast.makeText(this, c.getId(), Toast.LENGTH_SHORT).show();
-		ids.add(c.getDisplayName());
-		System.out.println("Testing id" + ids);
-		
-		
-	}
+		 v.setBackgroundColor(Color.GRAY);
 
-	public void SimpleAlert(View v) { //passing the view object from the adapter class
-		if(ids==null){System.out.println("I am the reason");}
-		else{
-		System.out.println("Am I getting the signal"); 
-		System.out.println("Tracking the clicks !! ");
-		 for(int i=0; i<ids.size(); i++)
-		  { 
-			  System.out.println(ids.get(i)); 
-		  }		  
-		  
+	//ContactAdapter1 con = null;
+	//con.getItem(position);
 		 
-		//converting array list to array
-		final CharSequence[] items = ids.toArray(new CharSequence[ids.size()]);
+
+          if (pos == 0) {
+              if (save != -1) {
+                  l.getChildAt(save).setBackgroundColor(Color.GRAY);
+              }
+              save = position;
+              pos++;
+              Log.d("Pos = 0", "Running");
+
+          }/* else {
+              l.getChildAt(save).setBackgroundColor(Color.GRAY);
+              save = position;
+              pos = 0;
+              Log.d("Pos # 0", "Running");
+          }*/
+
+		/* l.getChildAt(position).setBackgroundColor(Color.GRAY);
+		 if (save != -1 && save != position){
+		        l.getChildAt(save).setBackgroundColor(Color.BLACK);
+		    }
+
+		    save = position;    
+		*/
+
 		
-		boolean[] itemsChecked=new boolean[items.length];
+			 Object o = this.getListAdapter().getItem(position);
+			 
+			 Contact1 c = (Contact1) o;		
+			 
+			 Toast.makeText(this, c.getDisplayName(),
+			 Toast.LENGTH_SHORT).show();
+			
+			 
+			 // Toast.makeText(this, c.getId(), Toast.LENGTH_SHORT).show();
+			 ids.add(c.getDisplayName()); System.out.println("Testing id" +
+			  ids);
+			
+			 
+			 
+		}
 		
-		System.out.println(Arrays.toString(items)); 
-		Builder builder = new AlertDialog.Builder(v.getContext());
-		
-		builder.setTitle("Name of the members: Please choose the speaker:");
-		
-		
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-				ids.clear();
-			System.out.println("Freeing arraylist" + ids);
+	
+
+	public void SimpleAlert(View v) { // passing the view object from the
+										// adapter class
+		if (ids == null) {
+			System.out.println("I am the reason");
+		} else {
+			System.out.println("Am I getting the signal");
+			System.out.println("Tracking the clicks !! ");
+			for (int i = 0; i < ids.size(); i++) {
+				System.out.println(ids.get(i));
 			}
-		}); 
-		
-		builder.setMultiChoiceItems(items, itemsChecked, new
-				DialogInterface.OnMultiChoiceClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-				
-						
-					}
-				});
-		
-		
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
+
+			// converting array list to array
+			final CharSequence[] items = ids.toArray(new CharSequence[ids
+					.size()]);
+
+			boolean[] itemsChecked = new boolean[items.length];
+
+			System.out.println(Arrays.toString(items));
+			Builder builder = new AlertDialog.Builder(v.getContext());
+
+			builder.setTitle("Name of the members: Please choose the speaker:");
+
+			builder.setPositiveButton("OK",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+							ids.clear();
+							System.out.println("Freeing arraylist" + ids);
+						}
+					});
+
+			builder.setMultiChoiceItems(items, itemsChecked,
+					new DialogInterface.OnMultiChoiceClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which,
+								boolean isChecked) {
+
+						}
+					});
+
+			AlertDialog alert = builder.create();
+			alert.show();
+		}
 	}
 
 	/*
 	 * public void just_print() {
 	 * 
-	 * //System.out.println("Am I getting the signal"); 
-	 * for(int i=0;
-	 * i<ids.size(); i++)
-	 * { // System.out.println(ids.get(i)); }
+	 * //System.out.println("Am I getting the signal"); for(int i=0;
+	 * i<ids.size(); i++) { // System.out.println(ids.get(i)); }
 	 * 
 	 * 
 	 * }
 	 */
-	
 
 	private ContactList1 getContacts() {
 		ContactList1 contactList = new ContactList1();
@@ -190,8 +202,8 @@ public class ContactListActivity1 extends ListActivity {
 				name = cur
 						.getString(cur
 								.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-			//	System.out.println("checking going on !!");
-			//	System.out.println("ID:"+ids.get(0)+":Name"+name);
+				// System.out.println("checking going on !!");
+				// System.out.println("ID:"+ids.get(0)+":Name"+name);
 
 				final Bitmap photo;
 				if (img != null) {
