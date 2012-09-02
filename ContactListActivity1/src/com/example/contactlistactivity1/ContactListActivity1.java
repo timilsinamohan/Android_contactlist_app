@@ -1,6 +1,7 @@
 package com.example.contactlistactivity1;
 
 import android.app.Activity;
+import java.io.*;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.graphics.BitmapFactory;
@@ -11,8 +12,10 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -110,8 +113,8 @@ public class ContactListActivity1 extends ListActivity {
 			 
 			 Contact1 c = (Contact1) o;		
 			 
-			 Toast.makeText(this, c.getDisplayName(),
-			 Toast.LENGTH_SHORT).show();
+			// Toast.makeText(this, c.getDisplayName(),
+			// Toast.LENGTH_SHORT).show();
 			
 			 
 			 // Toast.makeText(this, c.getId(), Toast.LENGTH_SHORT).show();
@@ -151,10 +154,51 @@ public class ContactListActivity1 extends ListActivity {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
+							
+						
+					
+						//	This code will write the group in a file
+							try
+						    {
+							
+								File sdcard= Environment.getExternalStorageDirectory();
+
+								File dir = new File(sdcard.getAbsolutePath() + "/dir1/dir2");
+								dir.mkdirs();
+								File file = new File(dir, "my_group.txt");
+
+								FileOutputStream fOut = new FileOutputStream(file,true);
+							
+								PrintWriter pw = new PrintWriter(fOut);
+
+								for(int i=0;i<ids.size();i++)
+								{
+							
+								pw.write(ids.get(i));
+							    
+								pw.write("\n");
+								System.out.println("File is writing !!");
+								
+								}
+							//	myOutWriter.close();
+								pw.write("**********************************");
+								pw.write("\n");
+								pw.close();
+								fOut.close();
+								
+						}
+							 catch(IOException e)
+							    {
+							         e.printStackTrace();
+							       
+							    }
+
+							
 							ids.clear();
 							System.out.println("Freeing arraylist" + ids);
-						}
-					});
+							
+						
+						}});
 
 			builder.setMultiChoiceItems(items, itemsChecked,
 					new DialogInterface.OnMultiChoiceClickListener() {
@@ -180,6 +224,15 @@ public class ContactListActivity1 extends ListActivity {
 	 * 
 	 * }
 	 */
+
+	//Handling the Menu button
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_MENU) {
+	        System.out.println("I want to see the effect of Menu button");
+	    }
+	    return true;
+	}
+
 
 	private ContactList1 getContacts() {
 		ContactList1 contactList = new ContactList1();
